@@ -1,0 +1,17 @@
+{
+  "name": "express-mongoose-boilerplate",
+  "version": "1.0.0",
+  "description": "Boilerplate for Express.js and Mongoose using Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js"
+  },
+  "author": "sheikhMishar00",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.11"
+  }
+}

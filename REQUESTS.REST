@@ -1,0 +1,64 @@
+
+### REGISTER STUDENT
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+	"username": "Sayyid",
+	"password": "hi",
+	"data": [
+		{
+			"contentId": "_da6iuyG"
+		}
+	]
+}
+
+### LOGIN STUDENT
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+	"username": "Sayyid",
+	"password": "hi"
+}
+
+
+
+
+
+
+### GET ALL STUDENTS
+GET http://localhost:5000/api/students
+
+### GET STUDENT BY ID /:_id
+GET http://localhost:5000/api/students/5eea0ecc004c0624c40d6fb9
+
+### UPDATE STUDENT BY ID /:_id
+PUT http://localhost:5000/api/students/5eeb6969360b1f195049f329
+Content-Type: application/json
+
+{
+	"username": "Sayyidas"
+}
+
+### ADD STUDENT DATA BY ID /:_id
+PUT http://localhost:5000/api/students/5eeb6969360b1f195049f329/data
+Content-Type: application/json
+
+{
+	"contentId": "_da6iuyGd"
+}
+
+### DELETE STUDENT DATA BY ID /:_id
+DELETE http://localhost:5000/api/students/5eeb6969360b1f195049f329/data
+Content-Type: application/json
+
+{
+	"_id": "5eeb6969360b1f195049f329"
+}
+
+### DELETE STUDENT BY ID /:_id
+DELETE  http://localhost:5000/api/students/5eeb68fd3377091724437d20
+
+###
+DELETE  http://localhost:5000/api/students/5eeb6969360b1f195049f329
