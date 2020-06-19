@@ -3,10 +3,9 @@ const Student = require('../models/Student')
 
 // Return all students
 const allStudents = (req, res) => {
-  Student.find((err, data) => {
+  Student.find((err, doc) => {
     if (err) res.json({ message: 'err' })
-    // TODO: next(err)
-    else if (data) res.json(data)
+    else if (doc) res.json(doc)
   })
 }
 
@@ -14,10 +13,9 @@ const allStudents = (req, res) => {
 const studentDetails = (req, res) => {
   const { _id } = req.params
   // TODO: does hang while finding deleted id
-  Student.findById(_id, (err, data) => {
+  Student.findById(_id, (err, doc) => {
     if (err) res.json({ message: `Error Finding Student with ID: ${_id}` })
-    // Null
-    else if (data) res.json(data)
+    else if (doc) res.json(doc)
   })
 }
 
@@ -25,9 +23,18 @@ const studentDetails = (req, res) => {
 const updateStudent = (req, res) => {
   const { _id } = req.params
   const { body } = req
-  Student.findByIdAndUpdate(_id, { $set: body }, { new: true }, (err, data) => {
+  Student.findByIdAndUpdate(_id, { $set: body }, { new: true }, (err, doc) => {
     if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-    else res.json({ message: data })
+    else res.json(doc)
+  })
+}
+
+// Add student data by _id from param
+const getStudentData = (req, res) => {
+  const { _id } = req.params
+  Student.findById(_id, 'data', (err, doc) => {
+    if (err) res.json({ message: `Error Getting Student data with ID: ${_id}` })
+    else res.json(doc.data)
   })
 }
 
@@ -35,13 +42,27 @@ const updateStudent = (req, res) => {
 const addStudentData = (req, res) => {
   const { _id } = req.params
   const data = { data: req.body }
-  Student.findByIdAndUpdate(
-    _id,
-    { $push: data },
+  Student.findByIdAndUpdate(_id, { $push: data }, { new: true }, (err, doc) => {
+    if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
+    else res.json(doc.data)
+  })
+}
+
+// Update student data by _id from param
+const updateStudentData = (req, res) => {
+  const _id = req.params._id
+  const data = req.body
+  Student.findOneAndUpdate(
+    { _id: _id, data: { $elemMatch: { _id: data._id } } },
+    {
+      $set: {
+        'data.$': data
+      }
+    },
     { new: true },
-    (err, data) => {
+    (err, doc) => {
       if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-      else res.json({ message: data })
+      else res.json(doc.data.find(d => d._id.toString() === data._id))
     }
   )
 }
@@ -50,22 +71,17 @@ const addStudentData = (req, res) => {
 const deleteStudentData = (req, res) => {
   const { _id } = req.params
   const data = { data: req.body }
-  Student.findByIdAndUpdate(
-    _id,
-    { $pull: data },
-    { new: true },
-    (err, data) => {
-      if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-      else res.json({ message: data })
-    }
-  )
+  Student.findByIdAndUpdate(_id, { $pull: data }, { new: true }, (err, doc) => {
+    if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
+    else res.json(doc.data)
+  })
 }
 
 // Delete student by _id from param
 const deleteStudent = (req, res) => {
   const { _id } = req.params
 
-  Student.findByIdAndRemove(_id, (err, data) => {
+  Student.findByIdAndRemove(_id, (err, doc) => {
     if (err) res.json({ message: `Error Deleting Student with ID: ${_id}` })
     else res.json({ message: `Removed Student with ID: ${_id}` })
   })
@@ -76,9 +92,11 @@ const studentController = {
   allStudents,
   studentDetails,
   updateStudent,
+  deleteStudent,
+  getStudentData,
   addStudentData,
-  deleteStudentData,
-  deleteStudent
+  updateStudentData,
+  deleteStudentData
 }
 
 module.exports = studentController

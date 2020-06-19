@@ -18,6 +18,7 @@ mongoInit()
 
 // Routes
 app.use('/api/students', require('./routes/api/students'))
+app.use('/api/courses', require('./routes/api/courses'))
 app.use('/api/auth', require('./routes/api/auth'))
 
 // Create server

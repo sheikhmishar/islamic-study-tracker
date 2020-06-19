@@ -3,9 +3,11 @@ const {
   allStudents,
   studentDetails,
   updateStudent,
+  deleteStudent,
+  getStudentData,
   addStudentData,
-  deleteStudentData,
-  deleteStudent
+  updateStudentData,
+  deleteStudentData
 } = require('../../controllers/students')
 
 // @route   GET api/students
@@ -23,19 +25,29 @@ studentsRouter.get('/:_id', studentDetails)
 // @access  Public
 studentsRouter.put('/:_id', updateStudent)
 
-// @route   PUT api/students/:id/add
-// @desc    Add student data by id
-// @access  Public
-studentsRouter.put('/:_id/data', addStudentData)
-
-// @route   DELETE api/students/:id/add
-// @desc    Delete student data by id
-// @access  Public
-studentsRouter.delete('/:_id/data', deleteStudentData)
-
 // @route   DELETE api/students/:id
 // @desc    Delete students by id
 // @access  Public
 studentsRouter.delete('/:_id', deleteStudent)
+
+// @route   GET api/students/:id/data
+// @desc    Add student data by id
+// @access  Public
+studentsRouter.get('/:_id/data', getStudentData)
+
+// @route   POST api/students/:id/data
+// @desc    Add student data by id
+// @access  Public
+studentsRouter.post('/:_id/data', addStudentData)
+
+// @route   PUT api/students/:id/data
+// @desc    Update student data by id
+// @access  Public
+studentsRouter.put('/:_id/data', updateStudentData)
+
+// @route   DELETE api/students/:id/data
+// @desc    Delete student data by id
+// @access  Public
+studentsRouter.delete('/:_id/data', deleteStudentData)
 
 module.exports = studentsRouter
