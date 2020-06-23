@@ -24,6 +24,7 @@ mongoInit()
 app.use('/api/students', require('./routes/api/students'))
 app.use('/api/courses', require('./routes/api/courses'))
 app.use('/api/auth', require('./routes/api/auth'))
+app.use('/', (req, res) => res.status(200).json({ message: 'server alive' }))
 
 // Create server
 const expressPORT = process.env.PORT

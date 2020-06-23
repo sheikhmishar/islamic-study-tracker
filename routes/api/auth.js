@@ -10,7 +10,7 @@ authRouter.post('/login', login)
 // @route   POST api/auth
 // @desc    Register
 // @access  Public
-authRouter.post('/register', register)
+authRouter.post('/register', register) // TODO: redirect to POST ../students/
 
 // @route   POST api/auth
 // @desc    Auth

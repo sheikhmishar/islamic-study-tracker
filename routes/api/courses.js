@@ -1,6 +1,7 @@
 const coursesRouter = require('express').Router()
 const {
   allCourses,
+  updateCoursesRaw,
   courseDetails,
   addCourse,
   updateCourse,
@@ -11,6 +12,11 @@ const {
 // @desc    Get all courses
 // @access  Public
 coursesRouter.get('/', allCourses)
+
+// @route   PUT api/students/
+// @desc    Update all courses raw
+// @access  Public
+coursesRouter.put('/', updateCoursesRaw)
 
 // @route   POST api/courses/:id
 // @desc    Add new courses

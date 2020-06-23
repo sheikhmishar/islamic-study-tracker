@@ -11,6 +11,20 @@ const allCourses = (req, res) => {
   })
 }
 
+// Update whole Course collection from raw body query
+const updateCoursesRaw = (req, res) => {
+  const { body } = req
+  Course.deleteMany({}, err => {
+    if (err)
+      return res.status(INTERNAL_ERROR).json({ message: 'Error bulk deleting' })
+    Course.insertMany(body, { ordered: true }, (err, doc) => {
+      if (err)
+        res.status(INTERNAL_ERROR).json({ message: 'Error bulk inserting' })
+      else res.status(OK).json(doc)
+    })
+  })
+}
+
 // Return specific course by _id in param
 const courseDetails = (req, res) => {
   const { _id } = req.params
@@ -66,6 +80,7 @@ const deleteCourse = (req, res) => {
 // Instantiate the controller object
 const coursesController = {
   allCourses,
+  updateCoursesRaw,
   courseDetails,
   addCourse,
   updateCourse,

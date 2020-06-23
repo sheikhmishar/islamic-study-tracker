@@ -14,7 +14,7 @@ const allStudents = (req, res) => {
 // Return specific student by _id in param
 const studentDetails = (req, res) => {
   const { _id } = req.params
-  // TODO: does hang while finding deleted id
+  // TODO: fix hang while finding deleted id
   Student.findById(_id, (err, doc) => {
     if (err || !doc)
       res
@@ -111,15 +111,17 @@ const deleteStudent = (req, res) => {
   })
 }
 
-// TODO: Update whole document from raw body query
-const updateStudentRaw = (req, res) => {
+// Update whole Student collection from raw body query
+const updateStudentsRaw = (req, res) => {
   const { body } = req
-  Student.updateMany({ $set: body }, { new: true }, (err, doc) => {
+  Student.deleteMany({}, err => {
     if (err)
-      res
-        .status(INTERNAL_ERROR)
-        .json({ message: `Error Updating Student with ID: ${_id}` })
-    else res.status(OK).json(doc)
+      return res.status(INTERNAL_ERROR).json({ message: `Error bulk deleting` })
+    Student.insertMany(body, { ordered: true }, (err, doc) => {
+      if (err)
+        res.status(INTERNAL_ERROR).json({ message: `Error bulk inserting` })
+      else res.status(OK).json(doc)
+    })
   })
 }
 
@@ -132,7 +134,8 @@ const studentController = {
   getStudentData,
   addStudentData,
   updateStudentData,
-  deleteStudentData
+  deleteStudentData,
+  updateStudentsRaw
 }
 
 module.exports = studentController
