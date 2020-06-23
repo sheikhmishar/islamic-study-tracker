@@ -1,11 +1,12 @@
 {
-  "name": "express-mongoose-boilerplate",
+  "name": "islamic-study-tracker",
   "version": "1.0.0",
-  "description": "Boilerplate for Express.js and Mongoose using Node.js",
+  "description": "A simple islamic study tracker app to keep students focused and consistent",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "server": "nodemon server.js"
+    "server:dev": "nodemon server.js",
+    "server:prod": "NODE_ENV=production.local && nodemon server.js"
   },
   "author": "sheikhMishar00",
   "license": "MIT",
@@ -13,5 +14,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.9.11"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
   }
 }

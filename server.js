@@ -1,6 +1,9 @@
+const { mongoInit, setupEnv } = require('./config')
+// Setup environment variables
+setupEnv()
+
 // Importing Path and Express.js modules
 const express = require('express')
-const { mongoInit } = require('./config')
 const app = express()
 
 // Global middlewares
@@ -9,11 +12,12 @@ const cors = require('cors')({
   origin: true,
   maxAge: 60 * 60
 })
+// @ts-ignore
 app.use(cors)
 app.use(express.json()) // for parsing json from client
 app.use(express.urlencoded({ extended: true })) // for parsing url encoded data from client
 
-// DB
+// Intialize database
 mongoInit()
 
 // Routes

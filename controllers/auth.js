@@ -20,7 +20,7 @@ const register = (req, res) => {
 
   newStudent.save((err, data) => {
     if (err) res.json({ message: `Error Adding Student: ${newStudent}` })
-    else res.json({ message: data })
+    else res.json(data)
   }) // TODO: distinct username check
 }
 

@@ -16,15 +16,10 @@ const StudentDataSchema = new Schema({
     required: true,
     default: Date.now
   },
-  videoStartPosition: {
-    type: String,
-    required: true,
-    default: "00:00"
-  },
   videoEndPosition: {
-    type: String,
+    type: Number,
     required: true,
-    default: "00:00"
+    default: 0
   },
   finished: {
     type: Boolean,
