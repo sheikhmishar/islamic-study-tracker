@@ -26,7 +26,7 @@ app.use('/api/courses', require('./routes/api/courses'))
 app.use('/api/auth', require('./routes/api/auth'))
 
 // Create server
-const expressPORT = process.env.PORT || 5000
+const expressPORT = process.env.PORT
 app.listen(expressPORT, () =>
   console.log(`Server started on port ${expressPORT}`)
 )
