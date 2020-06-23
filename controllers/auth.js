@@ -1,12 +1,14 @@
 // Student Model
 const Student = require('../models/Student')
+const { CREATED, INTERNAL_ERROR, OK, NOT_FOUND } = require('./STATUS_CODES')
 
 // Logins and returns student data
 const login = (req, res) => {
   const { username, password } = req.body
   Student.find({ username, password }, (err, data) => {
-    if (err) res.json({ message: 'Error Login' })
-    else if (data) res.json(data)
+    if (err) res.status(INTERNAL_ERROR).json({ message: 'Error Login' })
+    else if (data && data.length > 0) res.status(OK).json(data)
+    else res.status(NOT_FOUND).json(data)
   })
 }
 
@@ -19,8 +21,11 @@ const register = (req, res) => {
   })
 
   newStudent.save((err, data) => {
-    if (err) res.json({ message: `Error Adding Student: ${newStudent}` })
-    else res.json(data)
+    if (err)
+      res
+        .status(INTERNAL_ERROR)
+        .json({ message: `Error Adding Student: ${newStudent}` })
+    else res.status(CREATED).json(data)
   }) // TODO: distinct username check
 }
 

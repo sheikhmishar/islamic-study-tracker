@@ -1,28 +1,19 @@
 const STATUS_CODES = {
-  OK: {
-    CODE: 200,
-    MESSAGE: 'success'
-  },
-  CREATED: {
-    CODE: 201,
-    MESSAGE: 'successfully created'
-  },
-  NOT_AUTHENTICATED: {
-    CODE: 401,
-    MESSAGE: 'authentication required'
-  },
-  NOT_AUTHORIZED: {
-    CODE: 403,
-    MESSAGE: 'access forbidden'
-  },
-  NOT_FOUND: {
-    CODE: 404,
-    MESSAGE: 'resource not found'
-  },
-  INTERNAL_ERROR: {
-    CODE: 500,
-    MESSAGE: 'internal server error'
-  }
+  OK: 200,
+  CREATED: 201,
+  NOT_AUTHENTICATED: 401,
+  NOT_AUTHORIZED: 403,
+  NOT_FOUND: 404,
+  INTERNAL_ERROR: 500
+}
+
+const STATUS_MESSAGES = {
+  OK: 'success',
+  CREATED: 'successfully created',
+  NOT_AUTHENTICATED: 'authentication required',
+  NOT_AUTHORIZED: 'access forbidden',
+  NOT_FOUND: 'resource not found',
+  INTERNAL_ERROR: 'internal server error'
 }
 
 module.exports = STATUS_CODES

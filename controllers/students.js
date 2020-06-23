@@ -1,11 +1,13 @@
 // Student Model
 const Student = require('../models/Student')
+const { CREATED, INTERNAL_ERROR, OK, NOT_FOUND } = require('./STATUS_CODES')
 
 // Return all students
 const allStudents = (req, res) => {
   Student.find((err, doc) => {
-    if (err) res.json({ message: 'err' })
-    else if (doc) res.json(doc)
+    if (err)
+      res.status(INTERNAL_ERROR).json({ message: 'Error finding students' })
+    else if (doc) res.status(OK).json(doc)
   })
 }
 
@@ -14,8 +16,11 @@ const studentDetails = (req, res) => {
   const { _id } = req.params
   // TODO: does hang while finding deleted id
   Student.findById(_id, (err, doc) => {
-    if (err) res.json({ message: `Error Finding Student with ID: ${_id}` })
-    else if (doc) res.json(doc)
+    if (err || !doc)
+      res
+        .status(err ? INTERNAL_ERROR : NOT_FOUND)
+        .json({ message: `Error Finding Student with ID: ${_id}` })
+    else res.status(OK).json(doc)
   })
 }
 
@@ -24,8 +29,11 @@ const updateStudent = (req, res) => {
   const { _id } = req.params
   const { body } = req
   Student.findByIdAndUpdate(_id, { $set: body }, { new: true }, (err, doc) => {
-    if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-    else res.json(doc)
+    if (err || !doc)
+      res
+        .status(err ? INTERNAL_ERROR : NOT_FOUND)
+        .json({ message: `Error Updating Student with ID: ${_id}` })
+    else res.status(OK).json(doc)
   })
 }
 
@@ -33,8 +41,11 @@ const updateStudent = (req, res) => {
 const getStudentData = (req, res) => {
   const { _id } = req.params
   Student.findById(_id, 'data', (err, doc) => {
-    if (err) res.json({ message: `Error Getting Student data with ID: ${_id}` })
-    else res.json(doc.data)
+    if (err || !doc)
+      res
+        .status(err ? INTERNAL_ERROR : NOT_FOUND)
+        .json({ message: `Error Getting Student data with ID: ${_id}` })
+    else res.status(OK).json(doc.data)
   })
 }
 
@@ -43,8 +54,11 @@ const addStudentData = (req, res) => {
   const { _id } = req.params
   const data = { data: req.body }
   Student.findByIdAndUpdate(_id, { $push: data }, { new: true }, (err, doc) => {
-    if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-    else res.json(doc.data)
+    if (err)
+      res
+        .status(INTERNAL_ERROR)
+        .json({ message: `Error Updating Student with ID: ${_id}` })
+    else res.status(CREATED).json(doc.data)
   })
 }
 
@@ -61,8 +75,12 @@ const updateStudentData = (req, res) => {
     },
     { new: true },
     (err, doc) => {
-      if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-      else res.json(doc.data.find(d => d._id.toString() === data._id))
+      if (err || !doc)
+        res
+          .status(err ? INTERNAL_ERROR : NOT_FOUND)
+          .json({ message: `Error Updating Student with ID: ${_id}` })
+      else
+        res.status(OK).json(doc.data.find(d => d._id.toString() === data._id))
     }
   )
 }
@@ -72,8 +90,11 @@ const deleteStudentData = (req, res) => {
   const { _id } = req.params
   const data = { data: req.body }
   Student.findByIdAndUpdate(_id, { $pull: data }, { new: true }, (err, doc) => {
-    if (err) res.json({ message: `Error Updating Student with ID: ${_id}` })
-    else res.json(doc.data)
+    if (err)
+      res
+        .status(INTERNAL_ERROR)
+        .json({ message: `Error Updating Student with ID: ${_id}` })
+    else res.status(OK).json(doc.data)
   })
 }
 
@@ -82,8 +103,23 @@ const deleteStudent = (req, res) => {
   const { _id } = req.params
 
   Student.findByIdAndRemove(_id, (err, doc) => {
-    if (err) res.json({ message: `Error Deleting Student with ID: ${_id}` })
-    else res.json({ message: `Removed Student with ID: ${_id}` })
+    if (err)
+      res
+        .status(INTERNAL_ERROR)
+        .json({ message: `Error Deleting Student with ID: ${_id}` })
+    else res.status(OK).json({ message: `Removed Student with ID: ${_id}` })
+  })
+}
+
+// TODO: Update whole document from raw body query
+const updateStudentRaw = (req, res) => {
+  const { body } = req
+  Student.updateMany({ $set: body }, { new: true }, (err, doc) => {
+    if (err)
+      res
+        .status(INTERNAL_ERROR)
+        .json({ message: `Error Updating Student with ID: ${_id}` })
+    else res.status(OK).json(doc)
   })
 }
 
