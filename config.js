@@ -1,14 +1,16 @@
 const mongoose = require('mongoose')
-const dotenv = require('dotenv')
 
 const setupEnv = () => {
   if (typeof process.env.NODE_ENV === 'undefined')
     process.env.NODE_ENV = 'development'
 
   const { NODE_ENV } = process.env
-  if (NODE_ENV === 'production.local') dotenv.config()
-  else if (NODE_ENV === 'development')
-    dotenv.config({ path: './.env.development', debug: true })
+  if (NODE_ENV !== 'production') {
+    const dotenv = require('dotenv')
+    if (NODE_ENV === 'production.local') dotenv.config()
+    else if (NODE_ENV === 'development')
+      dotenv.config({ path: './.env.development', debug: true })
+  }
 }
 
 const dbOptions = {
