@@ -7,6 +7,7 @@ const express = require('express')
 const app = express()
 
 // Global middlewares
+const { json, urlencoded } = express
 const cors = require('cors')({
   credentials: true,
   origin: true,
@@ -14,20 +15,22 @@ const cors = require('cors')({
 })
 // @ts-ignore
 app.use(cors)
-app.use(express.json()) // for parsing json from client
-app.use(express.urlencoded({ extended: true })) // for parsing url encoded data from client
+app.use(json()) // for parsing json from client
+app.use(urlencoded({ extended: true })) // for parsing url encoded data from client
 
 // Intialize database
 mongoInit()
 
 // Routes
-app.use('/api/students', require('./routes/api/students'))
-app.use('/api/courses', require('./routes/api/courses'))
-app.use('/api/auth', require('./routes/api/auth'))
-app.use('/', (req, res) => res.status(200).json({ message: 'server alive' }))
+const studentsRoute = require('./routes/api/students')
+const coursesRoute = require('./routes/api/courses')
+const authRoute = require('./routes/api/auth')
+const staticRoute = require('./routes/api/static')
+app.use('/api/students', studentsRoute)
+app.use('/api/courses', coursesRoute)
+app.use('/api/auth', authRoute)
+app.use('/', staticRoute)
 
 // Create server
-const expressPORT = process.env.PORT
-app.listen(expressPORT, () =>
-  console.log(`Server started on port ${expressPORT}`)
-)
+const { PORT } = process.env
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
