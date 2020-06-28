@@ -33,4 +33,6 @@ app.use('/', staticRoute)
 
 // Create server
 const { PORT } = process.env
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
+app.listen(PORT, () =>
+  console.log(`Server started on port ${PORT}`, new Date().toISOString())
+)

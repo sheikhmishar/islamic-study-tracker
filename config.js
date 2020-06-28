@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { join } = require('path')
 
 const setupEnv = () => {
   if (typeof process.env.NODE_ENV === 'undefined')
@@ -9,7 +10,7 @@ const setupEnv = () => {
     const dotenv = require('dotenv')
     if (NODE_ENV === 'production.local') dotenv.config()
     else if (NODE_ENV === 'development')
-      dotenv.config({ path: './.env.development', debug: true })
+      dotenv.config({ path: join(__dirname, '.env.development'), debug: true })
   }
 }
 
@@ -21,8 +22,17 @@ const dbOptions = {
 const mongoInit = () =>
   mongoose.connect(process.env.MONGO_URL, dbOptions, err =>
     console.log(
-      err ? `MongoDB Error: ${err}` : 'MongoDB Connected Successfully'
+      err ? `MongoDB Error: ${err}` : 'MongoDB Connected Successfully',
+      new Date().toISOString()
     )
   )
 
-module.exports = { mongoInit, setupEnv }
+const mongoDestroy = () =>
+  mongoose.disconnect(err =>
+    console.log(
+      err ? 'MongoDB Error Exiting' : 'MongoDB Safe Exit',
+      new Date().toISOString()
+    )
+  )
+
+module.exports = { mongoInit, mongoDestroy, setupEnv }
