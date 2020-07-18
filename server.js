@@ -7,7 +7,10 @@ const express = require('express')
 const app = express()
 
 // Global middlewares
-const { json, urlencoded } = express
+if (process.env.NODE_ENV !== 'production') {
+  const logger = require('morgan')('dev')
+  app.use(logger)
+}
 const cors = require('cors')({
   credentials: true,
   origin: true,
@@ -15,6 +18,7 @@ const cors = require('cors')({
 })
 // @ts-ignore
 app.use(cors)
+const { json, urlencoded } = express
 app.use(json()) // for parsing json from client
 app.use(urlencoded({ extended: true })) // for parsing url encoded data from client
 

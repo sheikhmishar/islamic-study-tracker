@@ -4,11 +4,13 @@ const { CREATED, INTERNAL_ERROR, OK, NOT_FOUND } = require('./STATUS_CODES')
 
 // Return all students
 const allStudents = (req, res) => {
-  Student.find((err, doc) => {
-    if (err)
+  Student.find()
+    .lean()
+    .exec()
+    .then(doc => res.status(OK).json(doc))
+    .catch(() =>
       res.status(INTERNAL_ERROR).json({ message: 'Error finding students' })
-    else if (doc) res.status(OK).json(doc)
-  })
+    )
 }
 
 // Return specific student by _id in param
