@@ -16,17 +16,33 @@ const writeJSONFile = (JSObject, fileName) => {
 ////////////////////////////////////////////////////////////////
 // START
 ////////////////////////////////////////////////////////////////
-const { up, down } = require('./migration-student')
-console.log('Init', new Date().toISOString())
-const migrate = async direction => {
-  const { prevCollection, newCollection } =
-    direction === 'up' ? await up() : await down()
-  writeJSONFile(prevCollection, 'test-dump-original')
-  writeJSONFile(newCollection, 'test-dump-migrated')
-}
+;(async () => {
+  const Meta = require('../Meta')
+  const currentRevision = await Meta.findOne()
+    .lean()
+    .exec()
+    .then(metaInfo => (metaInfo ? metaInfo : new Meta().save()))
+    .then(metaInfo => metaInfo.revision)
 
-migrate('up')
-// migrate('down')
+  const { up, down } = require('./migration-student')
+  console.log('Init', new Date().toISOString())
+  console.log('Current Revision', currentRevision)
+
+  const migrate = async direction => {
+    const { prevCollection, newCollection, metaInfo } =
+      direction === 'up'
+        ? await up(currentRevision)
+        : await down(currentRevision)
+    if (prevCollection.length)
+      writeJSONFile(prevCollection, `test-dump-original-${currentRevision}`)
+    if (newCollection.length)
+      writeJSONFile(newCollection, `test-dump-migrated-${metaInfo.revision}`)
+  }
+
+  // migrate('up')
+  // migrate('down')
+})()
+
 ////////////////////////////////////////////////////////////////
 // END
 ////////////////////////////////////////////////////////////////
