@@ -25,7 +25,7 @@ const mongoInit = () =>
       err ? `MongoDB Error: ${err}` : 'MongoDB Connected Successfully',
       new Date().toISOString()
     )
-  )
+  ) // TODO: implement retry
 
 const mongoDestroy = () =>
   mongoose.disconnect(err =>
